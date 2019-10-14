@@ -34,15 +34,21 @@ void m4096printhex(__m4096* variable){
 }
 
 // TODO
-// char* m4096tohex(__m4096* variable)
-// __m4096 hextom4096(char* string)
-// __m4096 uitom4096(unsigned int value)
-// __m4096 ulltom4096(unsigned long long value)
+// void m4096sub(__m4096* a, __m4096* b)	// subtract b from a, put output in a
+// char* m4096tohex(__m4096* variable)		// m4096printhex() except it returns char string
+// __m4096 hextom4096(char* string)		// atoi() inspired
+// __m4096 uitom4096(unsigned int value)	// unsigned int to m4096 (actually only last bytes, but still..)
+// __m4096 ulltom4096(unsigned long long value)	// unsigned long long to m4096
+// int m4096cmp(__m4096 a, __m4096 b)		// compare two m4096
+// void invertm4096(__m4096* variable)		// inverts byte order
+
+// STUPID TODO
+// void m4096addIo(__m4096* a, __m4096* b)	// Intel optimized add
+// void m4096subIo(__m4096* a, __m4096* b)	// Intel optimized subtract
 
 void m4096add(__m4096* a1, __m4096* a2){ 
 	/*
 	 * add a1 to a2, store value in a1
-	 * TODO if output > 4096^2, set a1 to zero
 	 */
 	// variables for addition
 	char carry;
@@ -73,9 +79,15 @@ void m4096add(__m4096* a1, __m4096* a2){
 		// clear values
 		memset(value.cval, 0x00, 2);
 	}
-
-	// write buffer to a1
-	memcpy(a1->n, buffer.n, 4096);
+	
+	if(carry == 0x00){
+		// write buffer to a1
+		memcpy(a1->n, buffer.n, 4096);
+	}else{
+		// sum is bigger than 4096 bytes
+		// set a1 to zero
+		m4096zero(a1);
+	}
 }
 
 int main(){
